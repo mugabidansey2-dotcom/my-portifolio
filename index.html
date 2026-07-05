@@ -11,7 +11,10 @@
     <nav class="navbar">
         <div class="container">
             <div class="logo">
-                <h1>Danny Tech</h1>
+                <a href="index.html" class="logo-link">
+                    <img src="images/profile.jpg" alt="Danny Tech logo" class="logo-image">
+                    <span>Danny Tech</span>
+                </a>
             </div>
             <ul class="nav-links">
                 <li><a href="index.html" class="active">Home</a></li>
@@ -26,8 +29,11 @@
     <section class="hero">
         <div class="container hero-layout">
             <div class="hero-content">
-                <p class="eyebrow">Hello, I'm Danny</p>
-                <h2>Building thoughtful web experiences that help ideas grow.</h2>
+                <p class="eyebrow animate-letters">Hello, I'm Danny</p>
+                <h2 class="animate-letters">
+                    <span class="hero-line">Building thoughtful web experiences</span>
+                    <span class="hero-line">that help ideas grow.</span>
+                </h2>
                 <p>I create modern websites and digital products with a focus on clean design and clear user journeys.</p>
                 <div class="hero-actions">
                     <a href="about.html" class="btn">Learn More About Me</a>
@@ -95,5 +101,35 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        function animateLetters(selector) {
+            document.querySelectorAll(selector).forEach((element) => {
+                const lines = element.querySelectorAll('.hero-line');
+                const animateText = (target) => {
+                    const text = target.textContent.trim();
+                    target.textContent = '';
+                    text.split('').forEach((char, index) => {
+                        const span = document.createElement('span');
+                        span.textContent = char === ' ' ? '\u00A0' : char;
+                        span.className = 'letter-fall';
+                        span.style.animationDelay = `${index * 0.045}s`;
+                        target.appendChild(span);
+                    });
+                };
+
+                if (lines.length) {
+                    lines.forEach((line) => animateText(line));
+                    return;
+                }
+
+                animateText(element);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            animateLetters('.animate-letters');
+        });
+    </script>
 </body>
 </html>
