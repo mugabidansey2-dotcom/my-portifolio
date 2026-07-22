@@ -5,38 +5,152 @@
 (function() {
     'use strict';
 
-    // ── 1. PARTICLE CANVAS BACKGROUND ─────────────────────────────────────────
+    // ── 1. PARTICLE + SPIDER WEB CANVAS BACKGROUND ───────────────────────────
     function initParticles() {
         const canvas = document.getElementById('particle-canvas');
         if (!canvas) return;
 
         const ctx = canvas.getContext('2d');
         let particles = [];
-        let animationId;
+        let webs = [];
         let mouse = { x: null, y: null, radius: 150 };
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = document.documentElement.scrollHeight;
+            initWebs();
         }
         resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = document.documentElement.scrollHeight;
+            initWebs();
+        });
 
+        // ── Spider Web ────────────────────────────────────────────────────────
+        class SpiderWeb {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                // Anchor point — scattered across the canvas
+                this.cx = Math.random() * canvas.width;
+                this.cy = Math.random() * canvas.height;
+
+                // Web dimensions — varied sizes
+                this.spokes = Math.floor(Math.random() * 4) + 6;   // 6–9 spokes
+                this.rings  = Math.floor(Math.random() * 3) + 3;   // 3–5 rings
+                this.maxRadius = Math.random() * 140 + 80;         // 80–220px
+
+                // Slow drift
+                this.vx = (Math.random() - 0.5) * 0.18;
+                this.vy = (Math.random() - 0.5) * 0.18;
+
+                // Breathing — each web slowly pulses in size
+                this.breathPhase  = Math.random() * Math.PI * 2;
+                this.breathSpeed  = 0.004 + Math.random() * 0.004;
+                this.breathAmount = 0.08 + Math.random() * 0.1;    // ±8–18%
+
+                // Slow rotation
+                this.angle        = Math.random() * Math.PI * 2;
+                this.rotSpeed     = (Math.random() - 0.5) * 0.0008;
+
+                // Slight asymmetry — spoke length multipliers give organic feel
+                this.spokeLengths = Array.from({ length: this.spokes },
+                    () => 0.75 + Math.random() * 0.5);
+            }
+
+            update() {
+                this.cx += this.vx;
+                this.cy += this.vy;
+                this.angle += this.rotSpeed;
+                this.breathPhase += this.breathSpeed;
+
+                // Wrap when fully off-screen
+                const pad = this.maxRadius * 1.5;
+                if (this.cx < -pad) this.cx = canvas.width + pad;
+                if (this.cx > canvas.width + pad) this.cx = -pad;
+                if (this.cy < -pad) this.cy = canvas.height + pad;
+                if (this.cy > canvas.height + pad) this.cy = -pad;
+            }
+
+            draw() {
+                const breathScale = 1 + Math.sin(this.breathPhase) * this.breathAmount;
+                const r = this.maxRadius * breathScale;
+
+                ctx.save();
+                ctx.translate(this.cx, this.cy);
+                ctx.rotate(this.angle);
+                ctx.globalAlpha = 0.32;
+                ctx.strokeStyle = 'rgba(255, 255, 255, 1)';
+                ctx.lineWidth = 0.6;
+
+                // ── Draw spokes ──────────────────────────────────────────────
+                const spokeAngle = (Math.PI * 2) / this.spokes;
+                const spokeEndPoints = [];
+
+                for (let i = 0; i < this.spokes; i++) {
+                    const a = spokeAngle * i;
+                    const len = r * this.spokeLengths[i];
+                    const ex = Math.cos(a) * len;
+                    const ey = Math.sin(a) * len;
+
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(ex, ey);
+                    ctx.stroke();
+
+                    spokeEndPoints.push({ x: ex, y: ey, len });
+                }
+
+                // ── Draw concentric rings (connected between spokes) ─────────
+                for (let ring = 1; ring <= this.rings; ring++) {
+                    const t = ring / this.rings;
+                    ctx.beginPath();
+
+                    for (let i = 0; i <= this.spokes; i++) {
+                        const idx = i % this.spokes;
+                        const a = spokeAngle * idx;
+                        const len = r * this.spokeLengths[idx] * t;
+                        const x = Math.cos(a) * len;
+                        const y = Math.sin(a) * len;
+
+                        if (i === 0) {
+                            ctx.moveTo(x, y);
+                        } else {
+                            // Slight curve between points for organic feel
+                            const prevIdx = (i - 1) % this.spokes;
+                            const pA = spokeAngle * prevIdx;
+                            const pLen = r * this.spokeLengths[prevIdx] * t;
+                            const cpx = Math.cos((a + pA) / 2) * len * 1.08;
+                            const cpy = Math.sin((a + pA) / 2) * len * 1.08;
+                            ctx.quadraticCurveTo(cpx, cpy, x, y);
+                        }
+                    }
+                    ctx.stroke();
+                }
+
+                ctx.globalAlpha = 1;
+                ctx.restore();
+            }
+        }
+
+        // ── Particles ─────────────────────────────────────────────────────────
         class Particle {
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
+                this.size = Math.random() * 1.5 + 0.5;
                 this.speedX = (Math.random() - 0.5) * 0.5;
                 this.speedY = (Math.random() - 0.5) * 0.5;
-                this.color = `rgba(56, 189, 248, ${Math.random() * 0.5 + 0.2})`;
+                this.opacity = Math.random() * 0.35 + 0.1;
             }
 
             update() {
                 this.x += this.speedX;
                 this.y += this.speedY;
 
-                // Mouse interaction
                 const dx = mouse.x - this.x;
                 const dy = mouse.y - this.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
@@ -48,7 +162,6 @@
                     this.y -= forceY * force * 3;
                 }
 
-                // Wrap around
                 if (this.x < 0) this.x = canvas.width;
                 if (this.x > canvas.width) this.x = 0;
                 if (this.y < 0) this.y = canvas.height;
@@ -56,17 +169,26 @@
             }
 
             draw() {
-                ctx.fillStyle = this.color;
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
             }
         }
 
-        function init() {
+        function initWebs() {
+            webs = [];
+            // One web per ~120k px of screen area, capped at 8
+            const count = Math.min(Math.floor((canvas.width * canvas.height) / 120000) + 3, 8);
+            for (let i = 0; i < count; i++) {
+                webs.push(new SpiderWeb());
+            }
+        }
+
+        function initParticleSet() {
             particles = [];
-            const particleCount = Math.min(Math.floor((canvas.width * canvas.height) / 15000), 120);
-            for (let i = 0; i < particleCount; i++) {
+            const count = Math.min(Math.floor((canvas.width * canvas.height) / 18000), 80);
+            for (let i = 0; i < count; i++) {
                 particles.push(new Particle());
             }
         }
@@ -76,12 +198,10 @@
                 for (let b = a + 1; b < particles.length; b++) {
                     const dx = particles[a].x - particles[b].x;
                     const dy = particles[a].y - particles[b].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < 100) {
-                        const opacity = (1 - distance / 100) * 0.3;
-                        ctx.strokeStyle = `rgba(56, 189, 248, ${opacity})`;
-                        ctx.lineWidth = 0.8;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 90) {
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${(1 - dist / 90) * 0.15})`;
+                        ctx.lineWidth = 0.5;
                         ctx.beginPath();
                         ctx.moveTo(particles[a].x, particles[a].y);
                         ctx.lineTo(particles[b].x, particles[b].y);
@@ -93,25 +213,28 @@
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
+
+            // Draw webs first (deepest layer)
+            webs.forEach(w => { w.update(); w.draw(); });
+
+            // Then particles + connections on top
+            particles.forEach(p => { p.update(); p.draw(); });
             connectParticles();
-            animationId = requestAnimationFrame(animate);
+
+            requestAnimationFrame(animate);
         }
 
         window.addEventListener('mousemove', (e) => {
             mouse.x = e.clientX;
             mouse.y = e.clientY + window.scrollY;
         });
-
         window.addEventListener('mouseleave', () => {
             mouse.x = null;
             mouse.y = null;
         });
 
-        init();
+        initWebs();
+        initParticleSet();
         animate();
     }
 
