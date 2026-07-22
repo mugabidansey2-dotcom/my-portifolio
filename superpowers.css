@@ -1,0 +1,196 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   SUPERPOWERS.CSS — Visual scaffolding for all the JS effects
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Particle canvas — sits behind everything ───────────────────────────── */
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+}
+
+/* Ensure page content stays above canvas */
+.navbar, section, footer {
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Custom glowing cursor ───────────────────────────────────────────────── */
+#cursor-glow {
+    position: fixed;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.6) 0%, rgba(56, 189, 248, 0) 70%);
+    box-shadow: 0 0 12px 4px rgba(56, 189, 248, 0.3);
+    transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+    mix-blend-mode: screen;
+}
+
+body:not(:hover) #cursor-glow {
+    opacity: 0;
+}
+
+/* Grow cursor over interactive elements */
+a:hover ~ #cursor-glow,
+button:hover ~ #cursor-glow {
+    width: 50px;
+    height: 50px;
+}
+
+/* ── Scroll progress bar ─────────────────────────────────────────────────── */
+#scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, #38bdf8, #a78bfa, #ff4d6d);
+    z-index: 9998;
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+    transition: width 0.1s linear;
+}
+
+/* ── Back to top button ──────────────────────────────────────────────────── */
+#back-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #38bdf8, #a78bfa);
+    color: #000;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    z-index: 9997;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+    box-shadow: 0 4px 20px rgba(56, 189, 248, 0.3);
+    pointer-events: none;
+}
+#back-to-top.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+#back-to-top:hover {
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.7), 0 8px 24px rgba(56, 189, 248, 0.4);
+    transform: translateY(-3px) scale(1.08);
+}
+
+/* ── Loading screen ──────────────────────────────────────────────────────── */
+#loading-screen {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    transition: opacity 0.5s ease;
+}
+
+.loader-logo {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 20px rgba(56, 189, 248, 0.8),
+                 0 0 40px rgba(56, 189, 248, 0.5);
+}
+
+.loader-bar {
+    width: 200px;
+    height: 3px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.loader-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #38bdf8, #a78bfa);
+    border-radius: 999px;
+    animation: loaderFill 0.8s ease-out forwards;
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+}
+
+@keyframes loaderFill {
+    from { width: 0; }
+    to   { width: 100%; }
+}
+
+/* ── Page transition overlay ─────────────────────────────────────────────── */
+#page-transition {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 99998;
+    opacity: 1;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    display: none;
+}
+
+/* ── 3D tilt card base styles ────────────────────────────────────────────── */
+.work-card,
+.project-card,
+.skill-item,
+.about-section-card,
+.contact-card {
+    transition: transform 0.15s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    will-change: transform;
+    transform-style: preserve-3d;
+}
+
+/* ── Animated gradient border on cards ──────────────────────────────────── */
+@keyframes borderGlow {
+    0%   { border-color: rgba(56, 189, 248, 0.15); }
+    50%  { border-color: rgba(167, 139, 250, 0.3); }
+    100% { border-color: rgba(56, 189, 248, 0.15); }
+}
+
+.work-card:hover,
+.project-card:hover {
+    animation: borderGlow 2s ease infinite;
+}
+
+/* ── Floating elements ───────────────────────────────────────────────────── */
+@keyframes floatSlow {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-12px); }
+}
+
+[data-float] {
+    animation: floatSlow 4s ease-in-out infinite;
+}
+
+/* ── Responsive — hide cursor on touch devices ───────────────────────────── */
+@media (hover: none) {
+    #cursor-glow { display: none; }
+}
+
+@media (max-width: 480px) {
+    #back-to-top {
+        bottom: 1.2rem;
+        right: 1.2rem;
+        width: 42px;
+        height: 42px;
+    }
+}

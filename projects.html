@@ -3,10 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects - My Portfolio</title>
+    <title>Projects - Danny Tech</title>
+    <meta name="description" content="Projects by Mugabi Danset — web development, graphic design, and creative work.">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="superpowers.css">
+    <style>
+        /* ── Dark theme override for projects page ───────────────────────────── */
+        body {
+            background: #000 !important;
+        }
+        body::before, body::after {
+            display: none;
+        }
+
+        /* Navbar goes dark */
+        .navbar {
+            background: rgba(0, 0, 0, 0.85) !important;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.6) !important;
+        }
+        .logo-link span,
+        .nav-links a {
+            color: #fff !important;
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent-color) !important;
+        }
+        .nav-links a.active::after {
+            background-color: var(--accent-color) !important;
+        }
+
+        /* Projects section dark background */
+        .projects-content {
+            background: #000 !important;
+            padding-top: 3rem;
+        }
+
+        /* Headings + intro text */
+        .projects-content h2 {
+            color: #fff !important;
+        }
+        .section-intro {
+            color: rgba(255,255,255,0.65) !important;
+        }
+
+        /* Project cards — dark glass */
+        .project-card {
+            background: rgba(255,255,255,0.04) !important;
+            border: 1px solid rgba(255,255,255,0.08) !important;
+            box-shadow: none !important;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.01);
+            border-color: rgba(56, 189, 248, 0.3) !important;
+            box-shadow: 0 16px 35px rgba(56, 189, 248, 0.15) !important;
+        }
+
+        /* Project info inside card */
+        .project-info h3 {
+            color: #fff !important;
+        }
+        .tech-stack {
+            color: var(--accent-color) !important;
+        }
+        .project-description {
+            color: rgba(255,255,255,0.65) !important;
+        }
+
+        /* Link button */
+        .link-btn {
+            background-color: var(--accent-color) !important;
+            color: #000 !important;
+            font-weight: 700;
+        }
+        .link-btn:hover {
+            background-color: #fff !important;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background: #000 !important;
+            border-top: 1px solid rgba(255,255,255,0.08) !important;
+            color: rgba(255,255,255,0.6) !important;
+        }
+        footer p { color: rgba(255,255,255,0.5); }
+        .social-links a { color: rgba(255,255,255,0.7) !important; }
+        .social-links a:hover { color: var(--accent-color) !important; }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.65s ease, transform 0.65s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
 </head>
 <body>
+    <!-- Superpowers scaffolding -->
+    <canvas id="particle-canvas"></canvas>
+    <div id="cursor-glow"></div>
+    <div id="scroll-progress"></div>
+    <button id="back-to-top" aria-label="Back to top">↑</button>
+    <div id="page-transition"></div>
+    <div id="loading-screen">
+        <div class="loader-logo">DANNY TECH</div>
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
@@ -16,7 +126,7 @@
                     <span>Danny Tech</span>
                 </a>
             </div>
-            <ul class="nav-links">
+            <ul class="nav-links" aria-label="Main navigation">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="projects.html" class="active">Projects</a></li>
@@ -28,12 +138,12 @@
     <!-- Projects Section -->
     <section class="projects-content">
         <div class="container">
-            <h2>My Projects</h2>
-            <p class="section-intro">Here are some of my recent projects showcasing my skills and experience.</p>
+            <h2 class="reveal" data-scramble>My Projects</h2>
+            <p class="section-intro reveal">Here are some of my recent projects showcasing my skills and experience.</p>
 
             <div class="projects-grid">
                 <!-- Project 1 -->
-                <div class="project-card">
+                <div class="project-card reveal">
                     <div class="project-image">
                         <img src="https://sdac.bugemauniv.ac.ug/_next/image?url=%2FABOUT%20SDAC.JPG&w=1200&q=75" alt="SDA Church Bugema University website preview">
                     </div>
@@ -48,7 +158,7 @@
                 </div>
 
                 <!-- Project 2 -->
-                <div class="project-card">
+                <div class="project-card reveal">
                     <div class="project-image">
                         <img src="https://mir-s3-cdn-cf.behance.net/projects/max_808_webp/041b02251337029.Y3JvcCwzMDAwLDIzNDYsMCwzMjY.jpg" alt="20 days project cover from Behance">
                     </div>
@@ -63,7 +173,7 @@
                 </div>
 
                 <!-- Project 3 -->
-                <div class="project-card">
+                <div class="project-card reveal">
                     <div class="project-image">
                         <img src="https://mir-s3-cdn-cf.behance.net/projects/max_808_webp/841d81251335811.Y3JvcCwxNDAwLDEwOTUsMCwxNTI.jpg" alt="Debate Tryouts project cover from Behance">
                     </div>
@@ -78,7 +188,7 @@
                 </div>
 
                 <!-- Project 4 -->
-                <div class="project-card">
+                <div class="project-card reveal">
                     <div class="project-image">
                         <img src="https://mir-s3-cdn-cf.behance.net/projects/max_808_webp/5de8d4250698605.Y3JvcCwzMDAwLDIzNDYsMCwzMjY.jpg" alt="My Works project cover from Behance">
                     </div>
@@ -98,13 +208,30 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p>&copy; 2024 Danny Tech. All rights reserved.</p>
+            <p>&copy; <span id="footer-year"></span> Danny Tech. All rights reserved.</p>
             <div class="social-links">
-                <a href="#">GitHub</a>
-                <a href="#">LinkedIn</a>
-                <a href="#">Twitter</a>
+                <a href="https://github.com/mugabidansey2-dotcom" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://www.linkedin.com/in/mugabi-dunset-696808397/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             </div>
         </div>
     </footer>
+
+    <script>
+        // Dynamic copyright year
+        document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+        // Scroll reveal with IntersectionObserver
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        reveals.forEach(el => observer.observe(el));
+    </script>
+    <script src="superpowers.js"></script>
 </body>
 </html>

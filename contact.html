@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact - Danny Tech</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="superpowers.css">
     <style>
         /* ── Dark theme override for contact page ─────────────────────────── */
         body {
@@ -118,6 +119,17 @@
     </style>
 </head>
 <body>
+    <!-- Superpowers scaffolding -->
+    <canvas id="particle-canvas"></canvas>
+    <div id="cursor-glow"></div>
+    <div id="scroll-progress"></div>
+    <button id="back-to-top" aria-label="Back to top">↑</button>
+    <div id="page-transition"></div>
+    <div id="loading-screen">
+        <div class="loader-logo">DANNY TECH</div>
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
@@ -254,5 +266,6 @@
         // Dynamic copyright year
         document.getElementById('footer-year').textContent = new Date().getFullYear();
     </script>
+    <script src="superpowers.js"></script>
 </body>
 </html>

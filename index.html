@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Portfolio - Welcome</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="superpowers.css">
     <style>
         /* ── Dark theme override for index page ───────────────────────────── */
         body {
@@ -100,6 +101,17 @@
     </style>
 </head>
 <body>
+    <!-- Superpowers scaffolding -->
+    <canvas id="particle-canvas"></canvas>
+    <div id="cursor-glow"></div>
+    <div id="scroll-progress"></div>
+    <button id="back-to-top" aria-label="Back to top">↑</button>
+    <div id="page-transition"></div>
+    <div id="loading-screen">
+        <div class="loader-logo">DANNY TECH</div>
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
@@ -123,7 +135,7 @@
         <div class="container hero-layout">
             <div class="hero-content">
                 <p class="eyebrow animate-letters">Hello, I'm Danny</p>
-                <h2 class="animate-letters">
+                <h2 class="animate-letters" data-scramble>
                     <span class="hero-line">Building thoughtful web experiences</span>
                     <span class="hero-line">that help ideas grow.</span>
                 </h2>
@@ -226,5 +238,6 @@
             if (yearEl) yearEl.textContent = new Date().getFullYear();
         });
     </script>
+    <script src="superpowers.js"></script>
 </body>
 </html>

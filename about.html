@@ -6,6 +6,7 @@
     <title>About - Danny Tech</title>
     <meta name="description" content="About Mugabi Danset — creative developer and designer building meaningful digital experiences.">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="superpowers.css">
     <style>
         /* ── Dark theme override for about page ──────────────────────────────── */
         body {
@@ -236,6 +237,17 @@
     </style>
 </head>
 <body>
+    <!-- Superpowers scaffolding -->
+    <canvas id="particle-canvas"></canvas>
+    <div id="cursor-glow"></div>
+    <div id="scroll-progress"></div>
+    <button id="back-to-top" aria-label="Back to top">↑</button>
+    <div id="page-transition"></div>
+    <div id="loading-screen">
+        <div class="loader-logo">DANNY TECH</div>
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
@@ -264,12 +276,12 @@
 
             <div class="about-grid">
                 <div class="about-text reveal-left">
-                    <h3>Who I Am</h3>
+                <h3 data-scramble>Who I Am</h3>
                     <p>Hello! I'm Mugabi Danset, a creative developer and designer with a passion for building websites, visual identities, and digital products that solve real problems.</p>
                     <p>I enjoy combining thoughtful design with clean technical execution, whether I'm crafting a user-friendly website or shaping a visual concept for a brand or campaign.</p>
                     <p>My work sits at the intersection of technology, design, and storytelling, and I'm always excited to turn ideas into polished digital experiences.</p>
                 </div>
-                <div class="about-image reveal-right">
+                <div class="about-image reveal-right" data-parallax="0.08">
                     <!-- slideshow wrapper — add more <img> tags here when you have extra photos -->
                     <div class="photo-slideshow">
                         <img src="images/danny.jpeg" alt="Mugabi Danset, developer and designer" class="about-photo slide active">
@@ -448,5 +460,6 @@
             }
         });
     </script>
+    <script src="superpowers.js"></script>
 </body>
 </html>
