@@ -93,11 +93,10 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p>&copy; 2024 Danny Tech. All rights reserved.</p>
+            <p>&copy; <span id="footer-year"></span> Danny Tech. All rights reserved.</p>
             <div class="social-links">
-                <a href="#">GitHub</a>
-                <a href="#">LinkedIn</a>
-                <a href="#">Twitter</a>
+                <a href="https://github.com/mugabidansey2-dotcom" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://www.linkedin.com/in/mugabi-dunset-696808397/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
             </div>
         </div>
     </footer>
@@ -129,6 +128,9 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             animateLetters('.animate-letters');
+            // Dynamic copyright year
+            const yearEl = document.getElementById('footer-year');
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
         });
     </script>
 </body>
